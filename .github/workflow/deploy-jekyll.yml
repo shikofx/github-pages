@@ -1,4 +1,4 @@
-вname: Build and Deploy Project Site
+name: Build and Deploy Project Site
 
 on:
   # Запускается при пуше в любую ветку, КРОМЕ main
