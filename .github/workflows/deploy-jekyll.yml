@@ -1,4 +1,4 @@
-name: Build and Deploy Project Site
+name: Build and Deploy Jekyll Site
 
 on:
   # Запускается при пуше в любую ветку, КРОМЕ main
@@ -17,8 +17,7 @@ permissions:
 
 # Разрешаем только одно одновременное развертывание, чтобы избежать гонки состояний
 concurrency:
-  # Группа уникальна для каждой ветки, чтобы сборки разных проектов не отменяли друг друга
-  group: "pages-${{ github.ref }}"
+  group: "pages-main"
   cancel-in-progress: false
 
 jobs:
@@ -37,29 +36,17 @@ jobs:
       - name: Run pre-build script to generate data
         run: python3 scripts/pre-build.py
 
-      - name: Update Jekyll config with dynamic baseurl
-        run: |
-          # baseurl должен быть равен имени ветки (т.е. имени проекта)
-          echo "baseurl: /${{ github.ref_name }}" >> _config.yml
-
-      - name: Upload 'projects' directory for inspection
-        uses: actions/upload-artifact@v4
-        with:
-          name: raw-projects-data
-          path: projects/
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Verify ./ content
+      - name: Verify content
         shell: bash
         run: |
           ls -R ./
 
-      - name: Verify _config.yml
-        shell: bash
+      - name: Update Jekyll config with dynamic baseurl
         run: |
-          cat _config.yml
+          echo "baseurl: ./${{ github.ref_name }}" >> _config.yml
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
@@ -67,22 +54,26 @@ jobs:
           source: ./
           destination: ./_site
 
-      - name: Verify ./_site content
+      - name: Verify ./_site
         shell: bash
         run: |
           ls -R ./_site
+          
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
 
-  # Job для развертывания
   deploy:
     environment:
-      # Создаем уникальное окружение для каждого проекта, чтобы избежать конфликтов правил
       name: ${{ github.ref_name }}
-      url: ${{ steps.deployment.outputs.page_url }}${{ github.ref_name }}
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Print data
+        shell: bash
+        run: |
+          echo "${{ steps.deployment.outputs }}"
+          echo "${{ steps.deployment.outputs.page_url }}${{ github.ref_name }}"
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

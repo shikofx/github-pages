@@ -8,9 +8,7 @@ def main():
     Scans the project directory structure, aggregates build metadata,
     and generates a single builds.json file for Jekyll's root directory.
     """
-    # "Сырые" данные лежат в папке projects
-    source_data_root = Path("projects")
-    # А результат (агрегированный JSON) мы кладем в специальную папку _data для Jekyll
+    source_data_root = Path(".")
     jekyll_data_dir = Path("_data")
     output_file = jekyll_data_dir / "builds.json"
 
@@ -23,9 +21,8 @@ def main():
 
     all_branches_data = []
 
-    # Iterate through potential branch directories
-    for project_dir in sorted(source_data_root.iterdir()): # Итерируемся по проектам (swift-ios-test-demo, etc.)
-        for branch_dir in sorted(project_dir.iterdir()): # Итерируемся по веткам внутри проекта
+    for branch_dir in sorted(source_data_root.iterdir()):
+        if not branch_dir.is_dir() or branch_dir.name.startswith(('_', '.')) or branch_dir.name == 'scripts':
             continue
 
         branch_info_path = branch_dir / "branch-info.json"
@@ -43,9 +40,7 @@ def main():
 
         branch_builds = []
 
-        # Iterate through potential build directories
         for build_dir in branch_dir.iterdir():
-            # Ensure it's a directory and its name is a number
             if not build_dir.is_dir() or not build_dir.name.isdigit():
                 continue
 
@@ -61,17 +56,14 @@ def main():
                 print(f"Warning: Could not read or parse '{build_meta_path}'. Skipping. Error: {e}")
 
         if branch_builds:
-            # Sort builds by build_number in descending order (newest first)
             branch_builds.sort(key=lambda b: b.get("build_number", 0), reverse=True)
             all_branches_data.append({
                 "branch_name": original_branch_name,
                 "builds": branch_builds
             })
 
-    # Создаем папку _data, если ее нет
     jekyll_data_dir.mkdir(exist_ok=True)
 
-    # Write the aggregated data to the output file
     with open(output_file, "w") as f:
         json.dump(all_branches_data, f, indent=2)
 
