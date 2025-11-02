@@ -1,0 +1,1 @@
+{"id":"b4ff4f8a1c433f76da7d81d8c03bdd63","fullName":"test://com.apple.xcode/SDET%20Demo%20App/Demo%20AppTests/MyCartViewControllerTest/test_calculateTotalPrice_when_cartIsEmpty_then_zero","name":"test_calculateTotalPrice_when_cartIsEmpty_then_zero()","status":"passed","testResultsByEnv":{"default":"45229b2362bd8afebdc2a1ac9e0d2cb2"}}
