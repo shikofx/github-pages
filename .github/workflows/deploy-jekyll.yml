@@ -36,13 +36,15 @@ jobs:
       - name: Run pre-build script to generate data
         run: python3 scripts/pre-build.py
 
-      - name: Verify content
-        shell: bash
-        run: |
-          ls -R ./
+      - name: Upload 'projects' directory for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-projects-data
+          path: ./
 
       - name: Update Jekyll config with dynamic baseurl
         run: |
+          echo "url: https://shikofx.github.io" >> _config.yml
           echo "baseurl: /github-pages/${{ github.ref_name }}" >> _config.yml
 
       - name: Setup Pages
@@ -54,13 +56,18 @@ jobs:
           source: ./
           destination: ./_site
 
+      - name: Copy assets to report directory
+        run: |
+          echo "Copying assets into ./_site/${{ github.ref_name }}/"
+          sudo cp -r ./_site/assets ./_site/${{ github.ref_name }}/
+
       - name: Verify ./_site
         shell: bash
         run: |
           ls -R ./_site
           
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
 
   deploy:
     environment:
