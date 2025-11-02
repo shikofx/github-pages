@@ -6,16 +6,16 @@ from pathlib import Path
 def main():
     """
     Scans the project directory structure, aggregates build metadata,
-    and generates a single builds.json file for Jekyll's _data directory.
+    and generates a single builds.json file for Jekyll's root directory.
     """
-    # Исходные данные лежат в папке _data в корне текущей ветки
-    data_root = Path("_data")
-    output_file = data_root / "builds.json"
+    source_data_root = Path(".") # Сканируем корень, где лежат папки проектов
+    # А результат (агрегированный JSON) мы кладем в специальную папку .data для Jekyll
+    jekyll_data_dir = Path("_data")
+    output_file = jekyll_data_dir / "builds.json"
 
-    if not data_root.is_dir():
-        print(f"Warning: Data directory '{data_root}' not found. Creating an empty builds.json.")
-        # Создаем папку _data и пустой файл, чтобы сборка Jekyll не упала
-        data_root.mkdir(exist_ok=True)
+    if not source_data_root.exists():
+        print(f"Warning: Source data directory '{source_data_root}' not found. Creating an empty builds.json.")
+        jekyll_data_dir.mkdir(exist_ok=True)
         with open(output_file, "w") as f:
             json.dump([], f)
         return
@@ -23,7 +23,11 @@ def main():
     all_branches_data = []
 
     # Iterate through potential branch directories
-    for branch_dir in sorted(data_root.iterdir()):
+    # Пропускаем служебные папки Jekyll (_data, _site, scripts и т.д.)
+    for project_dir in sorted(source_data_root.iterdir()):
+        if project_dir.name.startswith(('_', '.')) or not project_dir.is_dir() or project_dir.name == 'scripts':
+            continue
+    for branch_dir in sorted(project_dir.iterdir()):
         if not branch_dir.is_dir():
             continue
 
@@ -67,8 +71,8 @@ def main():
                 "builds": branch_builds
             })
 
-    # Убедимся, что папка _data существует
-    data_root.mkdir(exist_ok=True)
+    # Создаем папку _data, если ее нет
+    jekyll_data_dir.mkdir(exist_ok=True)
 
     # Write the aggregated data to the output file
     with open(output_file, "w") as f:

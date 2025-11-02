@@ -51,6 +51,12 @@ jobs:
         run: |
           ls -R ./
 
+      - name: Verify _config.yml
+        shell: bash
+        run: |
+          cat _config.yml
+
+
       - name: Build with Jekyll
         uses: actions/jekyll-build-pages@v1
         with:
