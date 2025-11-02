@@ -43,6 +43,12 @@ jobs:
           # Например, /swift-ios-test-demo
           echo "baseurl: /${{ github.ref_name }}" >> _config.yml
 
+      - name: Upload 'projects' directory for inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw-projects-data
+          path: projects/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 

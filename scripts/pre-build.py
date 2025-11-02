@@ -8,8 +8,9 @@ def main():
     Scans the project directory structure, aggregates build metadata,
     and generates a single builds.json file for Jekyll's root directory.
     """
-    source_data_root = Path(".") # Сканируем корень, где лежат папки проектов
-    # А результат (агрегированный JSON) мы кладем в специальную папку .data для Jekyll
+    # "Сырые" данные лежат в папке projects
+    source_data_root = Path("projects")
+    # А результат (агрегированный JSON) мы кладем в специальную папку _data для Jekyll
     jekyll_data_dir = Path("_data")
     output_file = jekyll_data_dir / "builds.json"
 
@@ -23,12 +24,8 @@ def main():
     all_branches_data = []
 
     # Iterate through potential branch directories
-    # Пропускаем служебные папки Jekyll (_data, _site, scripts и т.д.)
-    for project_dir in sorted(source_data_root.iterdir()):
-        if project_dir.name.startswith(('_', '.')) or not project_dir.is_dir() or project_dir.name == 'scripts':
-            continue
-    for branch_dir in sorted(project_dir.iterdir()):
-        if not branch_dir.is_dir():
+    for project_dir in sorted(source_data_root.iterdir()): # Итерируемся по проектам (swift-ios-test-demo, etc.)
+        for branch_dir in sorted(project_dir.iterdir()): # Итерируемся по веткам внутри проекта
             continue
 
         branch_info_path = branch_dir / "branch-info.json"
