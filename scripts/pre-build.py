@@ -13,8 +13,8 @@ def main():
     output_file = data_root / "builds.json"
 
     if not data_root.is_dir():
-        print(f"Error: Project root directory '{project_root}' not found.")
-        # Create an empty data file to prevent Jekyll build errors
+        print(f"Warning: Data directory '{data_root}' not found. Creating an empty builds.json.")
+        # Создаем папку _data и пустой файл, чтобы сборка Jekyll не упала
         data_root.mkdir(exist_ok=True)
         with open(output_file, "w") as f:
             json.dump([], f)
