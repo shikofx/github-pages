@@ -1,0 +1,13 @@
+{
+  "build_number": 611,
+  "commit_sha": "bc5a36b",
+  "timestamp": "2025-11-02T08:12:31Z",
+  "author": "shikofx",
+  "status": "success",
+  "reports": {
+    "allure": "reports/allure/index.html",
+    "swiftlint": "reports/swiftlint/index.html",
+    "swiftformat": "reports/swiftformat/index.html",
+    "coverage": "reports/coverage/index.html"
+  }
+}
