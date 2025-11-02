@@ -1,0 +1,1 @@
+{"id":"2a9a4e60316e616d08355c5730fe5a3b","fullName":"test://com.apple.xcode/SDET%20Demo%20App/Demo%20AppTests/MyCartViewControllerTest/test_calculateTotalPrice_when_cartHasOneItem_then_correctPrice","name":"test_calculateTotalPrice_when_cartHasOneItem_then_correctPrice()","status":"passed","testResultsByEnv":{"default":"c1016a2d2a6174fff64bf269e9bda9e9"}}
