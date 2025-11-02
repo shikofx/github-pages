@@ -1,0 +1,8 @@
+title: Project Quality Dashboard
+description: Provide SWIFT project with different kinds of tests with reporting
+
+remote_theme: shikofx/jekyll-theme-minimal
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag

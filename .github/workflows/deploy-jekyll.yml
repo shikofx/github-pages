@@ -39,8 +39,7 @@ jobs:
 
       - name: Update Jekyll config with dynamic baseurl
         run: |
-          # Добавляем baseurl, чтобы все ссылки на сайте были правильными
-          # Например, /swift-ios-test-demo
+          # baseurl должен быть равен имени ветки (т.е. имени проекта)
           echo "baseurl: /${{ github.ref_name }}" >> _config.yml
 
       - name: Upload 'projects' directory for inspection
