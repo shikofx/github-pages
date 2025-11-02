@@ -45,7 +45,7 @@ jobs:
       - name: Update Jekyll config with dynamic baseurl
         run: |
           echo "url: https://shikofx.github.io" >> _config.yml
-          echo "baseurl: /github-pages" >> _config.yml
+          echo "baseurl: /github-pages/${{ github.ref_name }}" >> _config.yml
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
